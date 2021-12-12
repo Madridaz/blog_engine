@@ -1,6 +1,8 @@
 package ru.arkhipenkov.blogengine;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ru.arkhipenkov.blogengine.model.User;
 
 @SpringBootApplication
 public class Main {
