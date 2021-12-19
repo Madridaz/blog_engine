@@ -1,18 +1,23 @@
 package ru.arkhipenkov.blogengine.model;
 
-import java.sql.Timestamp;
+import java.time.Instant;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import ru.arkhipenkov.blogengine.enums.ModerationStatus;
 
 @Entity
 @Table(name = "posts")
@@ -25,26 +30,30 @@ public class Post {
   private int id;
 
   //скрыта или активна публикация: 0 или 1
-  @NonNull
-  @Column(name = "is_active")
-  private int isActive;
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive;
 
-//moderation_status - ?
+  //статус модерации, по умолчанию "NEW"
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  @Column(name = "moderation_status", length = 10, nullable = false)
+  private ModerationStatus moderationStatus = ModerationStatus.NEW;
 
   //id пользователя-модератора, принявшего решение
-  @NonNull
-  @Column(name = "moderator_id")
-  private int moderatorId;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "moderator_id", referencedColumnName = "id")
+  private User moderatedBy;
 
   //автор поста
-  @NonNull
-  @Column(name = "user_id")
-  private int userId;
+  @NotNull
+  @ManyToOne(cascade = CascadeType.MERGE, optional = false)
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
+  private User author;
 
   //дата и время регистрации пользователя
   @NotNull
-  @Column(name = "time")
-  private Timestamp time;
+  @Column(nullable = false)
+  private Instant time;
 
   //заголовок поста
   @NotBlank

@@ -1,11 +1,19 @@
 package ru.arkhipenkov.blogengine.model;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,28 +30,37 @@ public class PostComments {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  //id комментария, на на который был оставлен этот комментарий
-  @Column(name = "parent_id")
-  private int parentId;
+  //id комментария, на который был оставлен этот комментарий
+  @ManyToOne
+  @JoinColumn(name = "parent_id", referencedColumnName = "id")
+  private PostComments parentComment;
 
-  //id поста, к которому оставлен комментарий
   @NotNull
-  @Column(name = "post_id")
-  private int postId;
+  @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY, orphanRemoval = true)
+  private final Set<PostComments> childComments = new HashSet<>();
 
-  //id автора комментария
+  // Автор комментария
   @NotNull
-  @Column(name = "user_id")
-  private int userId;
+  @ManyToOne(cascade = CascadeType.MERGE, optional = false)
+  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
+  private User user;
 
-  //дата и время комментария
+  // Пост, к которому написан комментарий
   @NotNull
-  @Column(name = "time")
-  private Timestamp time;
+  @ManyToOne(cascade = CascadeType.MERGE, optional = false)
+  @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false, updatable = false)
+  private Post post;
+
+  // Дата и время комментария
+  @NotNull
+  @Column(nullable = false)
+  @JsonProperty("raw_time")
+  private Instant time = Instant.now();
 
   //текст комментария
   @NotBlank
   @Column(columnDefinition = "TEXT")
   private String text;
+
 
 }
