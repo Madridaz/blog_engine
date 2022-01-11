@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet author="home (generated)" id="1640900661035-1">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-1">
         <createTable tableName="captcha_codes">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -12,7 +12,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-2">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-2">
         <createTable tableName="global_settings">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -28,7 +28,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-3">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-3">
         <createTable tableName="post_comments">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -46,7 +46,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-4">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-4">
         <createTable tableName="post_votes">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -65,7 +65,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-5">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-5">
         <createTable tableName="posts">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -90,7 +90,7 @@
             <column name="moderator_id" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-6">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-6">
         <createTable tableName="tag2post">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -103,7 +103,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-7">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-7">
         <createTable tableName="tags">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -113,7 +113,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-8">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-8">
         <createTable tableName="users">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
@@ -133,39 +133,44 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-9">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-9">
         <createIndex indexName="FK5lidm6cqbc7u4xhqpxm898qme" tableName="posts">
             <column name="user_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-10">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-10">
         <createIndex indexName="FK6m7nr3iwh1auer2hk7rd05riw" tableName="posts">
             <column name="moderator_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-11">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-11">
         <createIndex indexName="FK9jh5u17tmu1g7xnlxa77ilo3u" tableName="post_votes">
             <column name="post_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-12">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-12">
         <createIndex indexName="FK9q09ho9p8fmo6rcysnci8rocc" tableName="post_votes">
             <column name="user_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-13">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-13">
         <createIndex indexName="FKaawaqxjs3br8dw5v90w7uu514" tableName="post_comments">
             <column name="post_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-14">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-14">
         <createIndex indexName="FKc3b7s6wypcsvua2ycn4o1lv2c" tableName="post_comments">
             <column name="parent_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="home (generated)" id="1640900661035-15">
+    <changeSet author="Alexander_Arkhipenkov" id="1640900661035-15">
         <createIndex indexName="FKsnxoecngu89u3fh4wdrgf0f2g" tableName="post_comments">
             <column name="user_id"/>
         </createIndex>
+    </changeSet>
+    <changeSet author="Alexander_Arkhipenkov" id="sqlFile-example">
+        <sqlFile
+          path="Data.sql"
+          relativeToChangelogFile="true"/>
     </changeSet>
 </databaseChangeLog>

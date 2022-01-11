@@ -1,6 +1,7 @@
 spring:
   liquibase:
-  enabled: true
+    enabled: true
+    change-log: classpath:db/changelog/liquibase-outputChangeLog.xml
   datasource:
     url: jdbc:mysql://localhost:3306/blogengine?useSSL=false&serverTimezone=UTC
     username: root
