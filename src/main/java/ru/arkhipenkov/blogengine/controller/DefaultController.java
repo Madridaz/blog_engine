@@ -1,14 +1,21 @@
 package ru.arkhipenkov.blogengine.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import ru.arkhipenkov.blogengine.api.response.InitResponse;
 
-@RestController
+@Controller
 public class DefaultController {
 
-  @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\.]*}")
-  public String redirectToIndex() {
+  private final InitResponse initResponse;
+
+  public DefaultController(InitResponse initResponse) {
+    this.initResponse = initResponse;
+  }
+
+  @RequestMapping("/")
+  public String index(Model model) {
     return "index";
   }
 
