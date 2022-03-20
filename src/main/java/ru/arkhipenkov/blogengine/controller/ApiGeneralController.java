@@ -8,6 +8,7 @@ import ru.arkhipenkov.blogengine.api.response.InitResponse;
 import ru.arkhipenkov.blogengine.api.response.SettingsResponse;
 import ru.arkhipenkov.blogengine.service.CheckService;
 import ru.arkhipenkov.blogengine.service.SettingsService;
+import ru.arkhipenkov.blogengine.service.TagsService;
 
 @RestController
 @RequestMapping("/api")
@@ -16,12 +17,15 @@ public class ApiGeneralController {
   private final SettingsService settingsService;
   private final InitResponse initResponse;
   private final CheckService checkService;
+  private final TagsService tagsService;
 
   public ApiGeneralController(SettingsService settingsService,
-      InitResponse initResponse, CheckService checkService) {
+      InitResponse initResponse, CheckService checkService,
+      TagsService tagsService) {
     this.settingsService = settingsService;
     this.initResponse = initResponse;
     this.checkService = checkService;
+    this.tagsService = tagsService;
   }
 
   @GetMapping("/settings")
@@ -37,5 +41,10 @@ public class ApiGeneralController {
   @GetMapping("/auth/check")
   private CheckResponse checkResponse() {
     return checkService.check();
+  }
+
+  @GetMapping("/tag")
+  private String tagsResponse() {
+    return tagsService.getTags();
   }
 }
