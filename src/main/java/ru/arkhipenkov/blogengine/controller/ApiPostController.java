@@ -16,8 +16,8 @@ public class ApiPostController {
     this.postService = postService;
   }
 
-  @GetMapping("/post")
-  private Post post() {
-    return new PostService().testPost();
-  }
+//  @GetMapping("/post")
+//  private Post post() {
+//    return postService.testPost();
+//  }
 }
