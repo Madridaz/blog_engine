@@ -1,17 +1,17 @@
 package ru.arkhipenkov.blogengine.api.response;
 
+import java.util.List;
 import lombok.Data;
-import ru.arkhipenkov.blogengine.model.Post;
-import ru.arkhipenkov.blogengine.model.User;
+import ru.arkhipenkov.blogengine.model.dto.PostDto;
 
 @Data
 public class PostResponse {
 
-  private Post post;
-  private User user;
+  private int count;
+  private List<PostDto> posts;
 
-  public PostResponse(Post post, User user) {
-    this.post = post;
-    this.user = user;
+  public PostResponse(int count, List<PostDto> posts) {
+    this.count = count;
+    this.posts = posts;
   }
 }
