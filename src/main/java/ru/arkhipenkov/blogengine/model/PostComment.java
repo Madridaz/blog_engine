@@ -11,27 +11,35 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @NoArgsConstructor
-@Table(name = "captcha_codes")
-public class CaptchaCodes {
+@Entity
+@Table(name = "post_comments")
+public class PostComment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  @Column(name = "parent_id")
+  private Integer parentId;
+
+  @Column(name = "post_id", nullable = false)
+  private Integer postId;
+
+  @Column(name = "user_id", nullable = false)
+  private Integer userId;
+
   @Column(nullable = false)
   private LocalDateTime time;
 
   @Column(nullable = false)
-  private String code;
+  private String text;
 
-  @Column(name = "secret_code", nullable = false)
-  private String secretCode;
-
-  public CaptchaCodes(LocalDateTime time, String code, String secretCode) {
+  public PostComment(Integer parentId, Integer postId, Integer userId, LocalDateTime time, String text) {
+    this.parentId = parentId;
+    this.postId = postId;
+    this.userId = userId;
     this.time = time;
-    this.code = code;
-    this.secretCode = secretCode;
+    this.text = text;
   }
 }

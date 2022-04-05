@@ -6,27 +6,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "tag2post")
 @Data
-@NoArgsConstructor(force = true)
-public class Tag2Post {
+@NoArgsConstructor
+@Entity
+@Table(name = "tags")
+public class Tag {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Integer id;
 
-  //id поста
-  @NotNull
-  @Column(name = "post_id")
-  private int postId;
+  @Column(nullable = false)
+  private String name;
 
-  //id тега
-  @NotNull
-  @Column(name = "tag_id")
-  private int tagId;
+  public Tag(String name) {
+    this.name = name;
+  }
 }
