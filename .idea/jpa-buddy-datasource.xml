@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="JpbDataSourceConfig">
-    <data-sources>
-      <data-source id="6217956f-82f4-457c-a932-a2e409c3d8a6" name="blog_engine" url="jdbc:mysql://localhost/blog_engine?useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC" driverClass="com.mysql.cj.jdbc.Driver" />
-    </data-sources>
-  </component>
-</project>
