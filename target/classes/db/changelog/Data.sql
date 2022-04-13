@@ -97,7 +97,7 @@ INSERT IGNORE INTO `tags` (`id`, `name`) VALUES
 	(20, 'статистика'),
 	(21, 'технологии');
 
-INSERT IGNORE INTO `tag2post` (`post_id`, `tag_id`) VALUES
+INSERT IGNORE INTO `post2tag` (`post_id`, `tag_id`) VALUES
 	(1, 2),
 	(2, 1),
 	(2, 18),
