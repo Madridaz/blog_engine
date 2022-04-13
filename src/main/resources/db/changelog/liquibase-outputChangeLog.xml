@@ -93,7 +93,7 @@
         </createTable>
     </changeSet>
     <changeSet author="Alexander_Arkhipenkov" id="1640900661035-6">
-        <createTable tableName="tag2post">
+        <createTable tableName="post2tag">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
