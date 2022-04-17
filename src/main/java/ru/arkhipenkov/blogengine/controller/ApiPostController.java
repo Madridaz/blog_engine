@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import ru.arkhipenkov.blogengine.service.PostVoteService;
 
 @RestController
 @RequestMapping("/api/post")
+@RequiredArgsConstructor
 public class ApiPostController {
 
   private final PostService postService;
@@ -36,14 +38,6 @@ public class ApiPostController {
   @Value("${announce.length}")
   private Integer announceLength;
 
-  public ApiPostController(PostService postService,
-      PostVoteService postVoteService,
-      PostCommentService postCommentService) {
-    this.postService = postService;
-    this.postVoteService = postVoteService;
-    this.postCommentService = postCommentService;
-  }
-
   @GetMapping
   public ResponseEntity<?> getPosts(
       @RequestParam Integer offset,
@@ -55,6 +49,45 @@ public class ApiPostController {
     List<PostDto> dtos = getPostDtoList(postList);
 
     return ResponseEntity.ok(new PostListDto(postService.countPosts(), dtos));
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<?> searchPosts(
+      @RequestParam Integer offset,
+      @RequestParam Integer limit,
+      @RequestParam String query
+  ) {
+    List<Post> postList = postService.findPostsByQuery(query, offset, limit);
+
+    List<PostDto> dtos = getPostDtoList(postList);
+
+    return ResponseEntity.ok(new PostListDto(postService.countPostsByQuery(query), dtos));
+  }
+
+  @GetMapping("/byDate")
+  public ResponseEntity<PostListDto> findPostsByDate(
+      @RequestParam Integer offset,
+      @RequestParam Integer limit,
+      @RequestParam String date
+  ) {
+    List<Post> postList = postService.getPostsByDate(date, offset, limit);
+
+    List<PostDto> dtos = getPostDtoList(postList);
+
+    return ResponseEntity.ok(new PostListDto(postService.countPostsByDate(date), dtos));
+  }
+
+  @GetMapping("/byTag")
+  public ResponseEntity<?> findPostsByTag(
+      @RequestParam Integer offset,
+      @RequestParam Integer limit,
+      @RequestParam String tag
+  ) {
+    List<Post> postList = postService.findPostsByTag(tag, offset, limit);
+
+    List<PostDto> dtos = getPostDtoList(postList);
+
+    return ResponseEntity.ok(new PostListDto(postService.countPostsByTag(tag), dtos));
   }
 
   private List<PostDto> getPostDtoList(List<Post> postList) {

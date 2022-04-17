@@ -33,17 +33,17 @@ public class ApiGeneralController {
   private final Post2TagService post2TagService;
   private final PostService postService;
 
-  @GetMapping("/settings")
+  @GetMapping("settings")
   private SettingsResponse settings() {
     return settingsService.getGlobalSettings();
   }
 
-  @GetMapping("/init")
+  @GetMapping("init")
   private InitResponse init() {
     return initResponse;
   }
 
-  @GetMapping("/auth/check")
+  @GetMapping("auth/check")
   private CheckResponse checkResponse() {
     return checkService.check();
   }
@@ -64,6 +64,12 @@ public class ApiGeneralController {
     tagDtoList = tagService.setWeights(tagDtoList);
 
     return ResponseEntity.ok(new TagListDto(tagDtoList));
+  }
+
+  @GetMapping("calendar")
+  public ResponseEntity<?> calendar(@RequestParam(required = false) Integer year) {
+
+    return ResponseEntity.ok(postService.getCalendarDto(year));
   }
 
   private TagDto getTagDto(Tag tag) {
