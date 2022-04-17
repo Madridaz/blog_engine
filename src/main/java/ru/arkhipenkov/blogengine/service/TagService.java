@@ -45,4 +45,8 @@ public class TagService {
     return tagDtoList;
   }
 
+  public List<String> findAllByPostId(Integer postId) {
+    return tagsRepository.findAllByPostId(postId);
+  }
+
 }

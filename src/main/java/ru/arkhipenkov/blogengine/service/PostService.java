@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import ru.arkhipenkov.blogengine.enums.ModerationStatus;
 import ru.arkhipenkov.blogengine.model.Post;
+import ru.arkhipenkov.blogengine.model.User;
 import ru.arkhipenkov.blogengine.model.dto.CalendarDto;
 import ru.arkhipenkov.blogengine.repository.PostRepository;
 
@@ -109,6 +110,38 @@ public class PostService {
 
   public Integer countPostsByTag(String tag) {
     return postRepository.countAllByTag(tag);
+  }
+
+  public Post getPostByIdAndModerationStatus(Integer postId, User user) {
+
+    Post post;
+    if (user != null) {
+      post = postRepository.findById(postId).orElse(null);
+
+      if (user.getIsModerator() == 0 && post != null) {
+        if (!(post.getAuthor().getId().equals(user.getId()) ||
+            post.getIsActive() == (byte) 1 ||
+            post.getModerationStatus() == ModerationStatus.ACCEPTED)
+        ) {
+          post = null;
+        }
+      }
+    } else {
+      post = postRepository
+          .findByIdAndIsActiveAndModerationStatus(postId, (byte) 1, ModerationStatus.ACCEPTED)
+          .orElse(null);
+    }
+
+    if (post != null) {
+      if (user != null) {
+        if (post.getAuthor().getId().equals(user.getId())) {
+          return post;
+        }
+      }
+      post.setViewCount(post.getViewCount() + 1);
+      postRepository.updateViewCount(post.getId(), post.getViewCount());
+    }
+    return post;
   }
 
   public CalendarDto getCalendarDto(Integer year) {

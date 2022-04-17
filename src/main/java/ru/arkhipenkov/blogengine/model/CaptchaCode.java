@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name = "captcha_codes")
-public class CaptchaCodes {
+public class CaptchaCode {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class CaptchaCodes {
   @Column(name = "secret_code", nullable = false)
   private String secretCode;
 
-  public CaptchaCodes(LocalDateTime time, String code, String secretCode) {
+  public CaptchaCode(LocalDateTime time, String code, String secretCode) {
     this.time = time;
     this.code = code;
     this.secretCode = secretCode;
