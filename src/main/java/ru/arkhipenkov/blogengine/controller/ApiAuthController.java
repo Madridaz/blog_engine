@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.arkhipenkov.blogengine.model.CaptchaCode;
 import ru.arkhipenkov.blogengine.model.User;
+import ru.arkhipenkov.blogengine.model.dto.AuthUserDto;
+import ru.arkhipenkov.blogengine.model.dto.AuthUserInfoDto;
 import ru.arkhipenkov.blogengine.model.dto.ErrorsDto;
+import ru.arkhipenkov.blogengine.model.dto.LoginDto;
 import ru.arkhipenkov.blogengine.model.dto.RegisterDto;
 import ru.arkhipenkov.blogengine.model.dto.ResultTrueFalseDto;
 import ru.arkhipenkov.blogengine.service.AuthService;
 import ru.arkhipenkov.blogengine.service.CaptchaCodeService;
+import ru.arkhipenkov.blogengine.service.PostService;
 import ru.arkhipenkov.blogengine.service.UserService;
 
 @RestController
@@ -28,11 +32,43 @@ public class ApiAuthController {
   private final CaptchaCodeService captchaCodeService;
   private final AuthService authService;
   private final UserService userService;
+  private final PostService postService;
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @GetMapping("captcha")
   public ResponseEntity<?> getCaptcha() {
     return ResponseEntity.ok(captchaCodeService.getCaptchaDto());
+  }
+
+  @PostMapping("login")
+  public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+
+    User userFromDB = userService.findUserByEmail(loginDto.getEmail());
+
+    if (userFromDB != null && passwordEncoder.matches(loginDto.getPassword(),
+        userFromDB.getPassword())) {
+      authService.saveSession(userFromDB.getId());
+      return getAuthUserResponseEntityDto(userFromDB);
+    }
+    return ResponseEntity.ok(new ResultTrueFalseDto(false));
+  }
+
+  @GetMapping("check")
+  public ResponseEntity<?> check() {
+
+    if (authService.checkAuthorization()) {
+      User userFromDB = userService.findUserById(authService.getUserIdBySession());
+      return getAuthUserResponseEntityDto(userFromDB);
+    }
+    return ResponseEntity.ok(new ResultTrueFalseDto(false));
+  }
+
+  @GetMapping("logout")
+  public ResponseEntity<ResultTrueFalseDto> logout() {
+
+    authService.logout();
+
+    return ResponseEntity.ok(new ResultTrueFalseDto(true));
   }
 
   @PostMapping("register")
@@ -69,6 +105,31 @@ public class ApiAuthController {
     captchaCodeService.deleteCaptcha(captcha);
 
     return ResponseEntity.ok(new ResultTrueFalseDto(true));
+  }
+
+  private ResponseEntity<?> getAuthUserResponseEntityDto(User userFromDB) {
+    Integer moderationCount = null;
+
+    if (userFromDB.getIsModerator() == 1) {
+      moderationCount = postService.countPostsNeedModeration();
+      return getAuthUserDto(userFromDB, true, true, moderationCount);
+    }
+    return getAuthUserDto(userFromDB, false, false, moderationCount);
+  }
+
+  private ResponseEntity<AuthUserDto> getAuthUserDto
+      (User userFromDB, Boolean isModerator, Boolean settings, Integer moderationCount) {
+
+    AuthUserInfoDto userInfoDto = new AuthUserInfoDto(
+        userFromDB.getId(),
+        userFromDB.getName(),
+        userFromDB.getPhoto(),
+        userFromDB.getEmail(),
+        isModerator,
+        moderationCount,
+        settings);
+
+    return ResponseEntity.ok(new AuthUserDto(true, userInfoDto));
   }
 
 }

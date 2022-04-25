@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.arkhipenkov.blogengine.api.response.CheckResponse;
 import ru.arkhipenkov.blogengine.api.response.InitResponse;
 import ru.arkhipenkov.blogengine.api.response.SettingsResponse;
 import ru.arkhipenkov.blogengine.model.Tag;
 import ru.arkhipenkov.blogengine.model.dto.TagDto;
 import ru.arkhipenkov.blogengine.model.dto.TagListDto;
-import ru.arkhipenkov.blogengine.service.CheckService;
 import ru.arkhipenkov.blogengine.service.Post2TagService;
 import ru.arkhipenkov.blogengine.service.PostService;
 import ru.arkhipenkov.blogengine.service.SettingsService;
@@ -28,7 +26,6 @@ public class ApiGeneralController {
 
   private final SettingsService settingsService;
   private final InitResponse initResponse;
-  private final CheckService checkService;
   private final TagService tagService;
   private final Post2TagService post2TagService;
   private final PostService postService;
@@ -43,14 +40,10 @@ public class ApiGeneralController {
     return initResponse;
   }
 
-  @GetMapping("auth/check")
-  private CheckResponse checkResponse() {
-    return checkService.check();
-  }
-
   @GetMapping("tag")
   public ResponseEntity<?> getTags(@RequestParam(required = false) String query) {
-    List<Tag> tagList = query != null ? tagService.findByStartsWith(query) : tagService.findAllTags();
+    List<Tag> tagList =
+        query != null ? tagService.findByStartsWith(query) : tagService.findAllTags();
 
     if (tagList.size() == 0) {
       return ResponseEntity.ok(null);
@@ -75,7 +68,7 @@ public class ApiGeneralController {
   private TagDto getTagDto(Tag tag) {
     Integer postWithTagCount = post2TagService.countPostsWithTag(tag.getId());
     Integer postTotalCount = postService.countPosts();
-    Float weight = (float)postWithTagCount / postTotalCount;
+    Float weight = (float) postWithTagCount / postTotalCount;
 
     return new TagDto(tag.getName(), weight);
   }

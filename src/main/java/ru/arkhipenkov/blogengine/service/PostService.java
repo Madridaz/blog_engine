@@ -144,6 +144,61 @@ public class PostService {
     return post;
   }
 
+  public List<Post> getPostsByNeedModeration(String status, User moderator, Integer offset,
+      Integer limit) {
+    List<Post> postList = null;
+
+    switch (status) {
+      case "new":
+        postList = postRepository.findAllByModerationStatusAndIsActive(
+            ModerationStatus.NEW, (byte) 1,
+            PageRequest.of(offset / limit, limit)
+        );
+        break;
+      case "declined":
+        postList = postRepository.findAllByModerationStatusAndModeratorAndIsActive(
+            ModerationStatus.DECLINED, moderator, (byte) 1,
+            PageRequest.of(offset / limit, limit)
+        );
+        break;
+      case "accepted":
+        postList = postRepository.findAllByModerationStatusAndModeratorAndIsActive(
+            ModerationStatus.ACCEPTED, moderator, (byte) 1,
+            PageRequest.of(offset / limit, limit)
+        );
+        break;
+    }
+
+    return postList;
+  }
+
+  public Integer countPostsByNeedModeration(String status, User moderator) {
+    Integer count = 0;
+
+    switch (status) {
+      case "new":
+        count = postRepository.countAllByModerationStatusAndIsActive(ModerationStatus.NEW, (byte) 1);
+        break;
+      case "declined":
+        count = postRepository.countAllByModerationStatusAndModeratorAndIsActive(
+            ModerationStatus.DECLINED, moderator, (byte) 1
+        );
+        break;
+      case "accepted":
+        count = postRepository.countAllByModerationStatusAndModeratorAndIsActive(
+            ModerationStatus.ACCEPTED, moderator, (byte) 1
+        );
+        break;
+    }
+
+    return count;
+  }
+
+  public Integer countPostsNeedModeration() {
+    return postRepository.countByIsActiveAndModerationStatusAndTimeBefore(
+        (byte) 1, ModerationStatus.NEW, LocalDateTime.now());
+  }
+
   public CalendarDto getCalendarDto(Integer year) {
     List<Integer> yearsWithPublications = findPublicationYears();
 

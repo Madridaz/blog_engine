@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.arkhipenkov.blogengine.exceptions.BadRequestException;
+import ru.arkhipenkov.blogengine.exceptions.UnauthorizedException;
 import ru.arkhipenkov.blogengine.model.Post;
 import ru.arkhipenkov.blogengine.model.PostComment;
 import ru.arkhipenkov.blogengine.model.User;
@@ -117,6 +118,29 @@ public class ApiPostController {
     return ResponseEntity.ok(getOnePostDto(post));
   }
 
+  @GetMapping("/moderation")
+  public ResponseEntity<?> getPostsByNeedModeration(@RequestParam Integer offset,
+      @RequestParam Integer limit,
+      @RequestParam String status
+  ) {
+    if (!authService.checkAuthorization()) {
+      throw new UnauthorizedException();
+    }
+
+    List<Post> postList = postService.getPostsByNeedModeration(
+        status,
+        userService.findUserById(authService.getUserIdBySession()),
+        offset, limit);
+
+    List<PostDto> dtos = getPostDtoList(postList);
+
+    return ResponseEntity.ok(new PostListDto(postService.countPostsByNeedModeration(
+        status,
+        userService.findUserById(authService.getUserIdBySession())),
+        dtos
+    ));
+  }
+
   private List<PostDto> getPostDtoList(List<Post> postList) {
     return postList
         .stream()
@@ -179,7 +203,8 @@ public class ApiPostController {
 
     return new PostCommentDto(
         comment.getId(),
-        comment.getTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toEpochSecond(),
+        comment.getTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
+            .toEpochSecond(),
         comment.getText(),
         new CommentUserDto(
             commentUser.getId(),
