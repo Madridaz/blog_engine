@@ -8,7 +8,7 @@ spring:
     password: 1234567890
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
 blog_engine:
   title: "BlogEngine"
   subtitle: "Рассказы разработчиков"

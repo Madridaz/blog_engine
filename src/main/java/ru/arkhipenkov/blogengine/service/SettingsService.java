@@ -8,7 +8,7 @@ public class SettingsService {
 
   public SettingsResponse getGlobalSettings() {
     SettingsResponse settingsResponse = new SettingsResponse();
-    settingsResponse.setMultiuserMode(false);
+    settingsResponse.setMultiuserMode(true);
     settingsResponse.setPostPremoderation(true);
     settingsResponse.setStatisticIsPublic(true);
     return settingsResponse;

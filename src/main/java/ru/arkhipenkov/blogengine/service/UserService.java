@@ -23,6 +23,11 @@ public class UserService {
     return usersRepository.findByCode(code).orElse(null);
   }
 
+  public void updatePhoto(User user, String url) {
+    user.setPhoto(url);
+    usersRepository.save(user);
+  }
+
   public void saveUser(User user) {
     usersRepository.save(user);
   }
