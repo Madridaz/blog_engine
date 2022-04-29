@@ -1,5 +1,6 @@
 package ru.arkhipenkov.blogengine.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,39 @@ public class TagService {
 
   public List<Tag> findByStartsWith(String query) {
     return tagsRepository.findByNameStartingWith(query);
+  }
+
+  public List<Integer> findIdsByNames(List<String> tagNames) {
+    List<Integer> tagIds = new ArrayList<>();
+    tagNames.forEach(tagName -> {
+      Tag exist = tagsRepository.findByName(tagName).orElse(null);
+
+      if (exist != null) {
+        tagIds.add(exist.getId());
+      }
+    });
+
+    return tagIds;
+  }
+
+  public List<String> findAllByPostId(Integer postId) {
+    return tagsRepository.findAllByPostId(postId);
+  }
+
+  public List<Integer> saveTags(List<String> tagNamesNew, Integer postId) {
+    List<Integer> tagIds = new ArrayList<>();
+
+    for (String tagName : tagNamesNew) {
+      Tag exist = tagsRepository.findByName(tagName).orElse(null);
+
+      if (exist == null) {
+        exist = tagsRepository.save(new Tag(tagName));
+      }
+
+      tagIds.add(exist.getId());
+    }
+
+    return tagIds;
   }
 
   public List<TagDto> setWeights(List<TagDto> tagDtoList) {
@@ -44,9 +78,4 @@ public class TagService {
 
     return tagDtoList;
   }
-
-  public List<String> findAllByPostId(Integer postId) {
-    return tagsRepository.findAllByPostId(postId);
-  }
-
 }

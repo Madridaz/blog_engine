@@ -9,11 +9,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-blog_engine:
-  title: "BlogEngine"
-  subtitle: "Рассказы разработчиков"
-  phone: "+375 29 703 72 85"
-  email: "archipenkov@tut.by"
-  copyright: "Александр Архипенков"
-  copyrightFrom: "2022"
 
+upload:
+  path: src/main/resources/uploads/
