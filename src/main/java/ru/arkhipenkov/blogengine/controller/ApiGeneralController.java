@@ -217,7 +217,7 @@ public class ApiGeneralController {
       uploadFolder.mkdirs();
     }
     File dstFile = new File(uploadFolder, randomName + "." + type);
-    saveImage(50, image, dstFile, type);
+    saveImage(36, image, dstFile, type);
 
     return String.format("/%s%s.%s", dstPath, randomName, type);
   }
