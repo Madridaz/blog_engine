@@ -1,5 +1,5 @@
 INSERT IGNORE INTO users (id, code, email, is_moderator, name, password, photo, reg_time) VALUES
-	(1, NULL, 'archipenkov@tut.by', b'1', 'Александр Архипенков', '1234567890', NULL, '2022-01-01 04:23:57.000000'),
+	(1, NULL, 'super@mod.by', b'1', 'Александр Архипенков', '1234567890', NULL, '2022-01-01 04:23:57.000000'),
 	(2, NULL, 'konstantin_konstantinov@mail.by', b'0', 'Константин Константинов', '$2y$08$lDHUaI.h2K0nv882W4d/DudTaZSJF35g3dY/Nka67UwoOZt4JEkdu', NULL, '2022-01-01 18:24:51.000000'),
 	(3, NULL, 'anna@mail.by', b'0', 'Анна Аникина', '$2y$08$dTQ5uIeg6Ktt3wovddWeMu2QNNp166k3HgKkecxF5MnJqE/fohaQa', NULL, '2022-01-01 18:36:47.000000'),
 	(4, NULL, 'sergey@mail.by', b'0', 'Сергей Сергеев', '$2y$08$xV3JOkpu89Al.e2ICZFNcelQVN.M8Ml6ZyJS.6TdxAW1BRMJztk42', NULL, '2022-01-01 04:04:57.000000'),

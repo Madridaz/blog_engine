@@ -3,6 +3,7 @@ package ru.arkhipenkov.blogengine.controller;
 import java.time.LocalDateTime;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import liquibase.repackaged.org.apache.commons.lang3.RandomStringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,10 +18,13 @@ import ru.arkhipenkov.blogengine.model.dto.AuthUserDto;
 import ru.arkhipenkov.blogengine.model.dto.AuthUserInfoDto;
 import ru.arkhipenkov.blogengine.model.dto.ErrorsDto;
 import ru.arkhipenkov.blogengine.model.dto.LoginDto;
+import ru.arkhipenkov.blogengine.model.dto.PasswordRestoreDto;
 import ru.arkhipenkov.blogengine.model.dto.RegisterDto;
+import ru.arkhipenkov.blogengine.model.dto.RestoreDto;
 import ru.arkhipenkov.blogengine.model.dto.ResultTrueFalseDto;
 import ru.arkhipenkov.blogengine.service.AuthService;
 import ru.arkhipenkov.blogengine.service.CaptchaCodeService;
+import ru.arkhipenkov.blogengine.service.EmailService;
 import ru.arkhipenkov.blogengine.service.PostService;
 import ru.arkhipenkov.blogengine.service.UserService;
 
@@ -34,6 +38,7 @@ public class ApiAuthController {
   private final UserService userService;
   private final PostService postService;
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  private final EmailService emailService;
 
   @GetMapping("captcha")
   public ResponseEntity<?> getCaptcha() {
@@ -103,6 +108,58 @@ public class ApiAuthController {
 
 //Удаление капчи после использования
     captchaCodeService.deleteCaptcha(captcha);
+
+    return ResponseEntity.ok(new ResultTrueFalseDto(true));
+  }
+
+  @PostMapping("restore")
+  public ResponseEntity<?> restore(@RequestBody RestoreDto restoreDto) {
+    return recoverPassword(restoreDto.getEmail());
+  }
+
+
+  @PostMapping("password")
+  public ResponseEntity<?> password(@RequestBody PasswordRestoreDto passwordRestoreDto) {
+    User existUser = userService.findUserByRecoverCode(passwordRestoreDto.getCode());
+    CaptchaCode captcha = captchaCodeService.findCaptchaByCodeAndSecretCode(
+        passwordRestoreDto.getCaptcha(), passwordRestoreDto.getCaptchaSecret());
+
+    Map<String, String> errors = authService.checkOnErrors(
+        passwordRestoreDto.getPassword(),
+        captcha,
+        null,
+        existUser,
+        null
+    );
+
+    if (errors.size() > 0) {
+      return ResponseEntity.ok(new ErrorsDto(false, errors));
+    }
+
+    existUser.setCode("");
+    existUser.setPassword(passwordEncoder.encode(passwordRestoreDto.getPassword()));
+    userService.saveUser(existUser);
+
+    captchaCodeService.deleteCaptcha(captcha);
+
+    return ResponseEntity.ok(new ResultTrueFalseDto(true));
+  }
+
+  private ResponseEntity<?> recoverPassword(String email) {
+    User user = userService.findUserByEmail(email);
+
+    if (user == null) {
+      return ResponseEntity.ok(new ResultTrueFalseDto(false));
+    }
+
+    String token = RandomStringUtils.randomAlphanumeric(45).toLowerCase();
+
+    user.setCode(token);
+    userService.saveUser(user);
+
+    String link = "http://localhost:8080/login/change-password/" + token;
+    String message = "<a href=\"" + link + "\">Восстановить пароль</a>";
+    emailService.send(email, "Восстановление пароля", message);
 
     return ResponseEntity.ok(new ResultTrueFalseDto(true));
   }

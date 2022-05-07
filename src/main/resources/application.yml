@@ -12,3 +12,15 @@ spring:
 
 upload:
   path: src/main/resources/uploads/
+
+server:
+  port: ${PORT:8080}
+
+
+mail:
+  host: smtp.yandex.ru
+  username: archipenkov@tut.by
+  password:
+  port: 25
+  protocol: smtps
+  debug: true
