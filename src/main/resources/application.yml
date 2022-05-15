@@ -13,14 +13,18 @@ spring:
 upload:
   path: src/main/resources/uploads/
 
-server:
-  port: ${PORT:8080}
+#server:
+#  port: ${PORT:8080}
 
 
-mail:
-  host: smtp.yandex.ru
-  username: archipenkov@tut.by
-  password:
-  port: 25
-  protocol: smtps
-  debug: true
+  mail:
+      host: smtp.yandex.ru
+      username: blogmanager2022
+      password: qwerty123456zxcvb
+      port: 465
+      properties:
+        mail:
+          smtp:
+            auth: true
+            ssl:
+              enable: true
