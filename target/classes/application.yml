@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.yandex.ru
+    username: blogmanager2022@yandex.ru
+    password: qwerty123456zxcvb
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/liquibase-outputChangeLog.xml
@@ -17,14 +28,3 @@ upload:
 #  port: ${PORT:8080}
 
 
-  mail:
-      host: smtp.yandex.ru
-      username: blogmanager2022
-      password: qwerty123456zxcvb
-      port: 465
-      properties:
-        mail:
-          smtp:
-            auth: true
-            ssl:
-              enable: true
