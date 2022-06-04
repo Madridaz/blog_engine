@@ -24,7 +24,5 @@ spring:
 upload:
   path: src/main/resources/uploads/
 
-#server:
-#  port: ${PORT:8080}
 
 

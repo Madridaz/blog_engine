@@ -1,18 +1,18 @@
-package ru.arkhipenkov.blogengine.controller;
+package ru.arkhipenkov.blogengine.service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
-public class EmailController {
+@Service
+public class EmailService {
   private final JavaMailSender mailSender;
 
   @Autowired
-  public EmailController(JavaMailSender mailSender) {
+  public EmailService(JavaMailSender mailSender) {
     this.mailSender = mailSender;
   }
 
@@ -27,4 +27,5 @@ public class EmailController {
 
     mailSender.send(mimeMessage);
   }
+
 }

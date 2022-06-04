@@ -25,6 +25,7 @@ import ru.arkhipenkov.blogengine.model.dto.RestoreDto;
 import ru.arkhipenkov.blogengine.model.dto.ResultTrueFalseDto;
 import ru.arkhipenkov.blogengine.service.AuthService;
 import ru.arkhipenkov.blogengine.service.CaptchaCodeService;
+import ru.arkhipenkov.blogengine.service.EmailService;
 import ru.arkhipenkov.blogengine.service.PostService;
 import ru.arkhipenkov.blogengine.service.UserService;
 
@@ -38,7 +39,7 @@ public class ApiAuthController {
   private final UserService userService;
   private final PostService postService;
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-  private final EmailController emailController;
+  private final EmailService emailService;
 
   @GetMapping("captcha")
   public ResponseEntity<?> getCaptcha() {
@@ -160,7 +161,7 @@ public class ApiAuthController {
 
     String link = "http://localhost:8080/login/change-password/" + token;
     String message = "<a href=\"" + link + "\">Восстановить пароль</a>";
-    emailController.send(email, "Восстановление пароля", message);
+    emailService.send(email, "Ссылка для восстановления пароля", message);
 
     return ResponseEntity.ok(new ResultTrueFalseDto(true));
   }
